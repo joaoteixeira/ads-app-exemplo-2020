@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Cliente;
+use App\OrdemServico;
 
-class ClienteController extends Controller
+class OrdemServicoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +15,7 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes = Cliente::All();
-
-        return view('cliente.index', array('clientes' => $clientes));
+        return view('ordem-servico.index');
     }
 
     /**
@@ -26,7 +25,9 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        return view('cliente.create');
+        $clientes = Cliente::All();
+
+        return view('ordem-servico.create', ['clientes' => $clientes]);
     }
 
     /**
@@ -37,15 +38,19 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        // $cliente = new Cliente();
-        // $cliente->nome = $request->nome;
-        // $cliente->email = $request->email;
+        $cliente = Cliente::find($request->cliente);
 
-        // $cliente->save();
+        if(!$cliente)
+            return 'Erro ao selecionar o cliente';
 
-        $cliente = Cliente::create($request->all());
+        $data = new \Datetime();
 
-        return redirect('clientes')->with('status', 'Novo cliente cadastrado com sucesso!');
+        $os = new OrdemServico;
+        $os->cliente()->associate($cliente);
+        $os->data = $data->format('Y-m-d');
+        $os->save();
+
+        return $os;
     }
 
     /**
@@ -56,10 +61,7 @@ class ClienteController extends Controller
      */
     public function show($id)
     {
-        $cliente = Cliente::with('ordemServicos')->find($id);
-        //$cliente = Cliente::find($id)->ordemServicos;
-
-        return $cliente;
+        //
     }
 
     /**
@@ -70,9 +72,7 @@ class ClienteController extends Controller
      */
     public function edit($id)
     {
-        $cliente = Cliente::find($id);
-
-        return view('cliente.edit', array('cliente' => $cliente));
+        //
     }
 
     /**
@@ -84,10 +84,7 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $cliente = Cliente::find($id);
-        $cliente->update($request->all());
-
-        return redirect('clientes')->with('statusUpdate', 'Cliente atualizado com sucesso!');
+        //
     }
 
     /**
@@ -98,20 +95,6 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        $cliente = Cliente::find($id);
-        $nome = $cliente->nome;
-
-        $cliente->delete();
-
-        $mensagem = "O cliente <b>{$nome}</b> foi excluído com sucesso!";
-
-        return redirect('clientes')->with('statusUpdate', $mensagem);
-    }
-
-    public function destroyConfirm($id)
-    {
-        $cliente = Cliente::find($id);
-
-        return view('cliente.destroy', ['cliente' => $cliente]);
+        //
     }
 }

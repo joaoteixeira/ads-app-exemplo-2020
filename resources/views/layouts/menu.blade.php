@@ -20,7 +20,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link {{ request()->is('ordem-servicos*') ? 'active' : '' }}" href="{{ route('ordem-servicos.index') }}">
                     <span data-feather="users"></span>
                     Ordem de Serviços
                 </a>
