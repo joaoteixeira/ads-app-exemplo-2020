@@ -16,4 +16,9 @@ class OrdemServico extends Model
     {
         return $this->belongsTo('App\Cliente');
     }
+
+    public function servicos()
+    {
+        return $this->belongsToMany('App\Servico', 'ordem_servicos_servicos');
+    }
 }
